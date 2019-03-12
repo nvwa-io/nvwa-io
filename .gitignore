@@ -1,0 +1,5 @@
+nvwa-agent/nvwa-agent
+nvwa-agent/vendor
+nvwa-server/nvwa-server
+nvwa-ui/.idea
+nvwa-ui/node_modules

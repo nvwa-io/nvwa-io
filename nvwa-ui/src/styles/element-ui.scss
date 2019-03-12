@@ -1,0 +1,312 @@
+//覆盖一些element-ui样式
+
+.el-breadcrumb__inner, .el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+.el-upload {
+  input[type="file"] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+.cell {
+  .el-tag {
+    margin-right: 0px;
+  }
+}
+
+.small-padding {
+  .cell {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+.fixed-width {
+  .el-button--mini {
+    padding: 7px 10px;
+    width: 60px;
+  }
+}
+
+.status-col {
+  .cell {
+    padding: 0 10px;
+    text-align: center;
+    .el-tag {
+      margin-right: 0px;
+    }
+  }
+}
+
+//暂时性解决dialog 问题 https://github.com/ElemeFE/element/issues/2461
+.el-dialog {
+  transform: none;
+  left: 0;
+  position: relative;
+  margin: 0 auto;
+}
+
+//文章页textarea修改样式
+.article-textarea {
+  textarea {
+    padding-right: 40px;
+    resize: none;
+    border: none;
+    border-radius: 0px;
+    border-bottom: 1px solid #bfcbd9;
+  }
+}
+
+//element ui upload
+.upload-container {
+  .el-upload {
+    width: 100%;
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+}
+
+.el-button, .el-tag, .el-radio {
+  border-radius: 2px !important;
+}
+
+//dropdown
+.el-dropdown-menu {
+  a {
+    display: block
+  }
+}
+
+.el-menu-item, .el-submenu__title, .el-submenu .el-menu-item {
+  height: 42px;
+  line-height: 42px;
+  font-size: 13px;
+  //color: #3c86f6 !important;
+}
+
+// tab
+.tags-view-item {
+  background-color: transparent !important;
+  color: #63738d !important;
+  border-color: transparent !important;
+  border-radius: 5px 5px 0 0;
+  height: 30px !important;
+}
+
+.tags-view-item:before {
+  background: #b4d6ff !important;
+}
+
+.tags-view-item:hover {
+  background-color: #efefef !important;
+}
+
+.tags-view-item.active {
+  background-color: #fff !important;
+  color: #63738d !important;
+  //border-color: #d7e1e9 !important;
+}
+
+.el-breadcrumb {
+  font-size: 13px !important;
+}
+
+// 表格hover
+//.el-table--enable-row-hover .el-table__body tr:hover>td{
+//  background-color: #f9f9f9 !important;
+//}
+
+/// 系统默认的操作表格
+.table-primary {
+  // 表头背景和字体颜色
+  .el-table__header {
+    border: 1px solid #e0ecf3 !important;
+    border-right: none !important;
+    //border-bottom: none !important;
+  }
+
+  .el-table__header-wrapper {
+    border-right: 1px solid #E0ECF3 !important;
+  }
+
+  .el-table--border::after, .el-table--group::after, .el-table::before {
+    background-color: transparent !important;
+  }
+
+  .el-table__body-wrapper > table {
+    border-left: 1px solid #ebeef5 !important;
+  }
+
+  .el-table__body-wrapper {
+    border-right: 1px solid #ebeef5 !important;
+  }
+
+  .el-table__header > thead > tr > th {
+    //background-color: #ecf8ff !important;
+    background-color: #ecf5ff !important;
+    color: #1e6abc;
+    border: none;
+    font-size: 13px !important;
+  }
+
+  .el-table__row > td {
+    border-left: none !important;
+    border-right: none !important;
+  }
+
+  // table 的左上边框颜色
+  border: none !important;
+}
+
+.el-table__body-wrapper > table > tbody > tr > td {
+  color: #47494c !important;
+  font-size: 13px !important;
+}
+
+.table-grey {
+  .el-table__header {
+    border: 1px solid #eee!important;
+    border-right: none !important;
+    //border-bottom: none !important;
+  }
+  .el-table__header-wrapper {
+    border-right: 1px solid #eee!important;
+  }
+  .el-table__header > thead > tr > th {
+    //background-color: #ecf8ff !important;
+    background-color: #f3f3f3!important;
+    color: #666;
+    border: none;
+    font-size: 13px !important;
+  }
+}
+
+// 自定义mini 的step
+.step-mini {
+  .el-step.is-horizontal {
+    .el-step__head {
+      .el-step__icon {
+        height: 18px!important;
+        width: 18px!important;
+      }
+      .el-step__icon.is-text {
+        border: 1px solid!important;
+        .el-step__icon-inner {
+          font-weight: 400!important;
+          font-size: 13px!important;
+        }
+      }
+      .el-step__line {
+        height: 1px!important;
+        top: 9px!important;
+      }
+    }
+    .el-step__head.is-success,
+    //.el-step__head.is-process,
+    //.el-step__head.is-finish,
+    .el-step__head.is-error {
+      .el-step__icon.is-text {
+        border: 2px solid!important;
+        .el-step__icon-inner {
+          font-weight: 800!important;
+          font-size: 9px!important;
+        }
+      }
+    }
+    .el-step__main {
+      .el-step__title {
+        font-size: 13px!important;
+      }
+    }
+  }
+}
+
+.step-mini.in-column-fix{
+  .el-step.is-horizontal {
+    .el-step__head {
+      .el-step__icon.is-text {
+        .el-step__icon-inner {
+          font-size: 13px!important;
+          padding-top: 1px!important;
+        }
+      }
+      .el-step__line {
+        height: 1px!important;
+        top: 11px!important;
+      }
+    }
+  }
+}
+
+// 子页面菜单栏
+.sub-page-menu {
+  border-right: none!important;
+  background-color: #fafafa;
+  margin-top: 20px!important;
+  border-radius: 2px;
+  //border: 1px solid #f7f7f7!important;
+  .el-menu-item {
+    line-height: 35px!important;
+    height: 35px!important;
+  }
+}
+
+.el-input__inner, .el-textarea__inner, .el-input-group__append, .el-input-group__prepend{
+  border-radius: 2px;
+}
+
+.el-carousel__indicators--outside {
+  background-color: rgb(240, 242, 245);
+}
+
+.audit-badge {
+  float: right;
+  margin-top: 5px;
+  margin-left: 5px;
+  .el-badge__content {
+    border: 0 solid transparent!important;
+  }
+}
+
+//.el-table__expand-column {
+//  display: none;
+//}
+//.el-menu-item:hover {
+//  background: #d7f1ff !important;
+//  color: #3c86f6 !important;
+//}
+//
+//.el-menu-item.is-active {
+//  color: #fff !important;
+//  background-color: #3c86f6 !important;
+//}
+//
+//.el-submenu.is-active> .el-submenu__title {
+//  background-color: #f1f6f8 !important;
+//  color: #3c86f6 !important;
+//
+//  svg, span {
+//    color: #3c86f6 !important;
+//  }
+//}
+//
+//.el-submenu__title:hover {
+//  background-color: #d7f1ff !important;
+//  color: #3c86f6 !important;
+//}
+//
+//#app .sidebar-container .el-submenu .el-menu-item {
+//  background-color: #f1f6f8!important;
+//}
+//
+//.el-menu.el-menu--inline > .el-menu-item.is-active {
+//  color: #000!important;
+//}

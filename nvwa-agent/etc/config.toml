@@ -1,0 +1,29 @@
+Version = "1.0.0"
+
+# select locale, zh_CN | en_US
+Locale = "zh_CN"
+
+# Use storage type, local | oss | cos | aws-s3
+StorageType = "local"
+
+# jenkins builded package path
+JenkinsPkgWorkspace= "/data/nvwa/jenkins"
+
+# package root path in target host
+# nvwa-agent will pull package from package repository, then save to target host's version package path.
+# full package path: ${PkgRootPath}/${app}/${pkg}
+# e.g: /data/nvwa/packages/demo-01/demo-01.45.master.abcdefg.20190101010101.tar.gz
+PkgRootPath = "/data/nvwa/packages"
+
+# sync building status to nvwa-server
+[NvwaApi]
+BuildInfo = "http://localhost:9107/api/v1/build/update-info"
+UploadPackage= "http://localhost:9107/api/v1/build/upload-package"
+Notify = "http://localhost:9107/api/v1/notify/commit"
+
+# Aliyun cloud oss config
+[Oss]
+Endpoint = "oss-cn-hangzhou.aliyuncs.com"
+AccessKey = "LTAIEQPY1EoTe4I6"
+AccessSecret = "z7mwMmwzElfEkSarru1bb4Ywb1rWa7"
+Bucket = "yungeio"
