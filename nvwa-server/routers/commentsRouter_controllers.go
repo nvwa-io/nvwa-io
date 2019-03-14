@@ -433,17 +433,17 @@ func init() {
 
 	beego.GlobalControllerRouter["github.com/nvwa-io/nvwa-io/nvwa-server/controllers:ProjectRoleController"] = append(beego.GlobalControllerRouter["github.com/nvwa-io/nvwa-io/nvwa-server/controllers:ProjectRoleController"],
 		beego.ControllerComments{
-			Method: "Delete",
+			Method: "Detail",
 			Router: `/:project_role_id`,
-			AllowHTTPMethods: []string{"delete"},
+			AllowHTTPMethods: []string{"put"},
 			MethodParams: param.Make(),
 			Params: nil})
 
 	beego.GlobalControllerRouter["github.com/nvwa-io/nvwa-io/nvwa-server/controllers:ProjectRoleController"] = append(beego.GlobalControllerRouter["github.com/nvwa-io/nvwa-io/nvwa-server/controllers:ProjectRoleController"],
 		beego.ControllerComments{
-			Method: "Detail",
+			Method: "Delete",
 			Router: `/:project_role_id`,
-			AllowHTTPMethods: []string{"put"},
+			AllowHTTPMethods: []string{"delete"},
 			MethodParams: param.Make(),
 			Params: nil})
 
@@ -466,7 +466,7 @@ func init() {
 	beego.GlobalControllerRouter["github.com/nvwa-io/nvwa-io/nvwa-server/controllers:ProjectRolePermController"] = append(beego.GlobalControllerRouter["github.com/nvwa-io/nvwa-io/nvwa-server/controllers:ProjectRolePermController"],
 		beego.ControllerComments{
 			Method: "Create",
-			Router: `/`,
+			Router: `/admin/`,
 			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})
@@ -474,7 +474,7 @@ func init() {
 	beego.GlobalControllerRouter["github.com/nvwa-io/nvwa-io/nvwa-server/controllers:ProjectRolePermController"] = append(beego.GlobalControllerRouter["github.com/nvwa-io/nvwa-io/nvwa-server/controllers:ProjectRolePermController"],
 		beego.ControllerComments{
 			Method: "BatchUpdate",
-			Router: `/batch`,
+			Router: `/admin/batch`,
 			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})

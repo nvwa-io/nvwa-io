@@ -67,5 +67,4 @@ func (t *UserController) UpdateRole() {
 		t.FailJson(errs.ERR_PARAM, err.Error())
 		return
 	}
-
 }
