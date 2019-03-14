@@ -288,6 +288,9 @@ const vars = {
       manageApp: '应用管理',
       manageOrder: '工单管理',
       systemConfig: '系统设置',
+      addProjectRole: '添加项目角色',
+      editProjectRole: '修改项目角色',
+      projectRoleName: '角色名称',
 
       account: '账号',
       displayName: '姓名',

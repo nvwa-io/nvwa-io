@@ -14,6 +14,7 @@
 package controllers
 
 import (
+	"github.com/nvwa-io/nvwa-io/nvwa-server/entities"
 	"github.com/nvwa-io/nvwa-io/nvwa-server/entities/vo"
 	"github.com/nvwa-io/nvwa-io/nvwa-server/lang"
 	"github.com/nvwa-io/nvwa-io/nvwa-server/libs/errs"
@@ -97,4 +98,12 @@ func (t *ProjectRolePermController) BatchUpdate() {
 	}
 
 	t.SuccJson()
+}
+
+// @Title get all perms
+// @router /admin/ [get]
+func (t *ProjectRolePermController) All() {
+	t.SuccJson(RespData{
+		"list": entities.PERM_LABELS,
+	})
 }
