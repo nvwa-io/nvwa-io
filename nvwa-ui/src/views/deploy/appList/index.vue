@@ -54,7 +54,7 @@
         <template slot-scope="scope">
           <!--<span class="link-primary action-link" @click="handleUpdate(scope.row)">{{ $t('page.deploy.groupHost') }}</span>-->
           <router-link :to="{path:'/app-list/env', query:{app_id: scope.row.app.id}}" class="link-primary action-link">{{ $t('page.deploy.env') }}</router-link>
-          <router-link class="link-primary action-link" to="/app-list/env">{{ $t('page.deploy.appStatus') }}</router-link>
+          <!--<router-link class="link-primary action-link" to="/app-list/env">{{ $t('page.deploy.appStatus') }}</router-link>-->
         </template>
       </el-table-column>
       <el-table-column
@@ -148,7 +148,8 @@
       </div>
     </el-dialog>
 
-    <el-dialog :visible.sync="dialogDeployCmd" :close-on-click-modal="false" title="部署命令" width="85%" top="5vh">
+    <!--:close-on-click-modal="false"-->
+    <el-dialog :visible.sync="dialogDeployCmd" title="部署命令" width="85%" top="5vh">
       <el-steps :active="-1" align-center class="step-mini" style="margin-bottom: 30px;">
         <el-step title="步骤1" description="检测基础环境"/>
         <el-step title="步骤2" description="服务器下载和解压版本包"/>
@@ -197,7 +198,8 @@
       </div>
     </el-dialog>
 
-    <el-dialog :visible.sync="dialogBuildCmd" :close-on-click-modal="false" title="构建命令" width="85%" top="5vh">
+    <!--:close-on-click-modal="false" -->
+    <el-dialog :visible.sync="dialogBuildCmd" title="构建命令" width="85%" top="5vh">
       <el-steps :active="-1" align-center class="step-mini" style="margin-bottom: 30px;">
         <el-step title="步骤1" description="拉取/更新代码"/>
         <el-step title="步骤2" description="初始化构建工作空间"/>
@@ -251,7 +253,6 @@
 </template>
 
 <script>
-import { updateArticle } from '@/api/article'
 import apiSystem from '@/api/system'
 import apiApp from '@/api/app'
 import { Message } from 'element-ui'
@@ -299,33 +300,13 @@ export default {
 
       loadingAppForm: false,
 
-      // @TODO 待删除
-      pvData: [],
       rules: {
         name: [{ required: true, message: '应用名称不能为空', trigger: 'blur' }],
         deploy_user: [{ required: true, message: '部署用户不能为空', trigger: 'blur' }],
-        deployPath: [{ required: true, message: '部署路径不能为空', trigger: 'blur' }],
+        deploy_path: [{ required: true, message: '部署路径不能为空', trigger: 'blur' }],
         repo_url: [{ required: true, message: 'Git 仓库不能为空', trigger: 'blur' }]
       },
       downloadLoading: false,
-
-      gridData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }],
 
       dialogDeployCmd: false,
       tmpEditorCmd: '',
@@ -461,7 +442,6 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          console.log(this.formAppData)
           this.loadingAppForm = true
           apiApp.create({ project_id: this.$store.state.project.curProject.id,
             name: this.formAppData.name,
@@ -561,24 +541,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateArticle(tempData).then(() => {
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
-                break
-              }
-            }
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '更新成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
+          console.log(this.$refs['dataForm'])
         }
       })
     }
