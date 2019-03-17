@@ -1,158 +1,186 @@
 <template>
   <div>
     <div class="app-container">
-      <h3>系统配置</h3>
+
+      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+        <el-menu-item index="config-deploy">部署</el-menu-item>
+        <el-menu-item index="config-build">构建</el-menu-item>
+        <el-menu-item index="config-version-pkg">版本包</el-menu-item>
+        <el-menu-item index="config-git">Git 认证</el-menu-item>
+        <el-menu-item index="config-notify">通知</el-menu-item>
+        <el-menu-item index="config-user">登录/注册</el-menu-item>
+        <el-menu-item index="config-project">项目权限</el-menu-item>
+      </el-menu>
+
       <br>
 
       <el-form ref="form" :model="form" label-width="160px">
 
         <el-row :gutter="30">
-          <el-col :xs="12" :sm="12" :lg="12">
+          <el-col :xs="18" :sm="18" :lg="18">
 
-            <div class="table-out-title"> 部署配置<span class="tail"/></div>
+            <div v-show="activeIndex === 'config-deploy'">
+              <el-form-item label="部署根路径">
+                <el-input v-model="form.deployRootPath"/>
+              </el-form-item>
+              <el-form-item label="允许自定义部署路径">
+                <el-switch v-model="form.customDeployPath"/>
+              </el-form-item>
+              <el-form-item label="默认部署用户">
+                <el-input v-model="form.deployUser"/>
+              </el-form-item>
+              <el-form-item label="允许自定义部署用户">
+                <el-switch v-model="form.customDeployUser"/>
+              </el-form-item>
+            </div>
 
-            <el-form-item label="部署根路径">
-              <el-input v-model="form.deployRootPath"/>
-            </el-form-item>
-            <el-form-item label="允许自定义部署路径">
-              <el-switch v-model="form.customDeployPath"/>
-            </el-form-item>
-            <el-form-item label="默认部署用户">
-              <el-input v-model="form.deployUser"/>
-            </el-form-item>
-            <el-form-item label="允许自定义部署用户">
-              <el-switch v-model="form.customDeployUser"/>
-            </el-form-item>
+            <div v-show="activeIndex === 'config-build'">
+              <el-form-item label="本地版本包根路径">
+                <el-input v-model="form.pkgRootPath"/>
+              </el-form-item>
+              <el-form-item label="本地代码仓库根路径">
+                <el-input v-model="form.repoRootPath"/>
+              </el-form-item>
+              <el-form-item label="本地构建空间根路径">
+                <el-input v-model="form.buildRootPath"/>
+              </el-form-item>
+              <el-form-item label="使用 Jenkins 构建">
+                <el-switch v-model="form.useJenkins"/>
+              </el-form-item>
+              <el-form-item label="Jenkins 服务地址">
+                <el-input v-model="form.jenkinsUrl"/>
+              </el-form-item>
+              <el-form-item label="Jenkins 用户">
+                <el-input v-model="form.jenkinsUser"/>
+              </el-form-item>
+              <el-form-item label="Jenkins 密码">
+                <el-input v-model="form.jenkinsPassword"/>
+              </el-form-item>
+              <el-form-item label="Jenkins 创建应用模板">
+                <el-input v-model="form.jenkinsTemplate" type="textarea"/>
+              </el-form-item>
+            </div>
 
-            <div class="table-out-title"> 构建配置<span class="tail"/></div>
-            <el-form-item label="本地版本包根路径">
-              <el-input v-model="form.pkgRootPath"/>
-            </el-form-item>
-            <el-form-item label="本地代码仓库根路径">
-              <el-input v-model="form.repoRootPath"/>
-            </el-form-item>
-            <el-form-item label="本地构建空间根路径">
-              <el-input v-model="form.buildRootPath"/>
-            </el-form-item>
-            <el-form-item label="使用 Jenkins 构建">
-              <el-switch v-model="form.useJenkins"/>
-            </el-form-item>
-            <el-form-item label="Jenkins 服务地址">
-              <el-input v-model="form.jenkinsUrl"/>
-            </el-form-item>
-            <el-form-item label="Jenkins 用户">
-              <el-input v-model="form.jenkinsUser"/>
-            </el-form-item>
-            <el-form-item label="Jenkins 密码">
-              <el-input v-model="form.jenkinsPassword"/>
-            </el-form-item>
-            <el-form-item label="Jenkins 创建应用模板">
-              <el-input v-model="form.jenkinsTemplate" type="textarea"/>
-            </el-form-item>
+            <div v-show="activeIndex === 'config-git'">
+              <el-form-item label="Git 认证方式">
+                <el-radio-group v-model="form.gitCIAuthType">
+                  <el-radio label="账号密码"/>
+                  <el-radio label="Token"/>
+                  <el-radio label="SSH 免密"/>
+                </el-radio-group>
+              </el-form-item>
+
+              <el-form-item label="Git 用户名">
+                <el-input v-model="form.gitCIUser"/>
+              </el-form-item>
+
+              <el-form-item label="Git 密码">
+                <el-input v-model="form.gitCIPassword"/>
+              </el-form-item>
+
+              <el-form-item label="Git Token">
+                <el-input v-model="form.gitCIToken"/>
+              </el-form-item>
+            </div>
+
+            <div v-show="activeIndex === 'config-version-pkg'">
+              <el-form-item label="服务器版本包根路径">
+                <el-input v-model="form.pkgRootPath"/>
+              </el-form-item>
+
+              <el-form-item label="版本包仓库存储">
+                <el-select v-model="form.pkgStorageType" placeholder="请选择存储方式">
+                  <el-option label="主机本地" value="shanghai"/>
+                  <el-option label="阿里云 OSS" value="beijing"/>
+                </el-select>
+              </el-form-item>
+
+              <el-form-item label="版本包保留数量">
+                <el-input-number v-model="form.pkgLimit" :min="1" :max="10" label="描述文字"/>
+              </el-form-item>
+
+              <el-form-item label="OSS Endpoint">
+                <el-input v-model="form.pkgStorageConfig.oss.endpoint"/>
+              </el-form-item>
+
+              <el-form-item label="OSS AccessKey">
+                <el-input v-model="form.pkgStorageConfig.oss.accessKey"/>
+              </el-form-item>
+
+              <el-form-item label="OSS AccessSecret">
+                <el-input v-model="form.pkgStorageConfig.oss.accessSecret"/>
+              </el-form-item>
+
+              <el-form-item label="OSS Bucket">
+                <el-input v-model="form.pkgStorageConfig.oss.bucket"/>
+              </el-form-item>
+            </div>
+
+            <div v-show="activeIndex === 'config-notify'">
+              <el-form-item label="通知类型">
+                <el-select
+                  v-model="selectedNotifyTypes"
+                  multiple
+                  filterable
+                  allow-create
+                  default-first-option
+                  placeholder="请选择">
+                  <el-option
+                    v-for="item in selectNotifyTypes"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"/>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="通知配置">
+                <el-input v-model="form.desc" type="textarea"/>
+              </el-form-item>
+            </div>
+
+            <div v-show="activeIndex === 'config-user'">
+              <el-form-item label="新建项目用户角色">
+                <el-select
+                  v-model="selectedNotifyTypes"
+                  multiple
+                  filterable
+                  allow-create
+                  default-first-option
+                  placeholder="请选择">
+                  <el-option
+                    v-for="item in selectNotifyTypes"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"/>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="开放注册">
+                <el-switch v-model="form.enableRegister"/>
+              </el-form-item>
+              <el-form-item label="开启 LDAP ">
+                <el-switch v-model="form.enableLdap"/>
+              </el-form-item>
+            </div>
+            <div v-show="activeIndex === 'config-project'">
+              <el-form-item label="新建项目用户角色">
+                <el-select
+                  v-model="selectedNotifyTypes"
+                  multiple
+                  filterable
+                  allow-create
+                  default-first-option
+                  placeholder="请选择">
+                  <el-option
+                    v-for="item in selectNotifyTypes"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"/>
+                </el-select>
+              </el-form-item>
+            </div>
 
             <el-form-item>
               <el-button type="primary">保存</el-button>
-              <el-button>取消</el-button>
             </el-form-item>
-          </el-col>
-
-          <el-col :xs="12" :sm="12" :lg="12">
-            <div class="table-out-title"> Git 认证配置<span class="tail"/></div>
-            <el-form-item label="Git 认证方式">
-              <el-radio-group v-model="form.gitCIAuthType">
-                <el-radio label="账号密码"/>
-                <el-radio label="Token"/>
-                <el-radio label="SSH 免密"/>
-              </el-radio-group>
-            </el-form-item>
-
-            <el-form-item label="Git 用户名">
-              <el-input v-model="form.gitCIUser"/>
-            </el-form-item>
-
-            <el-form-item label="Git 密码">
-              <el-input v-model="form.gitCIPassword"/>
-            </el-form-item>
-
-            <el-form-item label="Git Token">
-              <el-input v-model="form.gitCIToken"/>
-            </el-form-item>
-
-            <div class="table-out-title"> 版本包配置<span class="tail"/></div>
-            <el-form-item label="服务器版本包根路径">
-              <el-input v-model="form.pkgRootPath"/>
-            </el-form-item>
-
-            <el-form-item label="版本包仓库存储">
-              <el-select v-model="form.pkgStorageType" placeholder="请选择存储方式">
-                <el-option label="主机本地" value="shanghai"/>
-                <el-option label="阿里云 OSS" value="beijing"/>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="版本包保留数量">
-              <el-input-number v-model="form.pkgLimit" :min="1" :max="10" label="描述文字"/>
-            </el-form-item>
-
-            <el-form-item label="OSS Endpoint">
-              <el-input v-model="form.pkgStorageConfig.oss.endpoint"/>
-            </el-form-item>
-
-            <el-form-item label="OSS AccessKey">
-              <el-input v-model="form.pkgStorageConfig.oss.accessKey"/>
-            </el-form-item>
-
-            <el-form-item label="OSS AccessSecret">
-              <el-input v-model="form.pkgStorageConfig.oss.accessSecret"/>
-            </el-form-item>
-
-            <el-form-item label="OSS Bucket">
-              <el-input v-model="form.pkgStorageConfig.oss.bucket"/>
-            </el-form-item>
-
-            <div class="table-out-title"> 通知配置<span class="tail"/></div>
-            <el-form-item label="通知类型">
-              <el-select
-                v-model="notifyTypes"
-                multiple
-                filterable
-                allow-create
-                default-first-option
-                placeholder="请选择">
-                <el-option
-                  v-for="item in selectNotifyTypes"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="通知配置">
-              <el-input v-model="form.desc" type="textarea"/>
-            </el-form-item>
-
-            <div class="table-out-title"> 登录注册<span class="tail"/></div>
-            <el-form-item label="新建项目用户角色">
-              <el-select
-                v-model="form.notifyEnablesTypes"
-                multiple
-                filterable
-                allow-create
-                default-first-option
-                placeholder="请选择">
-                <el-option
-                  v-for="item in selectNotifyTypes"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="开放注册">
-              <el-switch v-model="form.enableRegister"/>
-            </el-form-item>
-            <el-form-item label="开启 LDAP ">
-              <el-switch v-model="form.enableLdap"/>
-            </el-form-item>
-
           </el-col>
         </el-row>
       </el-form>
@@ -171,7 +199,7 @@ export default {
   components: { Pagination },
   data() {
     return {
-      activeIndex: 'wait',
+      activeIndex: 'config-deploy',
 
       form: {
         defaultProjectRoleId: 0,
@@ -210,6 +238,8 @@ export default {
         notifyEnablesTypes: [],
         notifyConfig: {}
       },
+
+      selectedNotifyTypes: [],
 
       selectNotifyTypes: [{
         value: 'email',
@@ -284,6 +314,9 @@ export default {
         console.log(error)
         Message.error(error)
       })
+    },
+    handleSelect(curIndex) {
+      this.activeIndex = curIndex
     }
   }
 }
