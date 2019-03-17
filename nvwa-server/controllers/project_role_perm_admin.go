@@ -14,6 +14,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"github.com/nvwa-io/nvwa-io/nvwa-server/entities"
 	"github.com/nvwa-io/nvwa-io/nvwa-server/entities/vo"
 	"github.com/nvwa-io/nvwa-io/nvwa-server/lang"
@@ -66,8 +67,41 @@ func (t *ProjectRolePermController) Create() {
 	t.SuccJson(RespData{"id": id})
 }
 
+// @Title Batch create to project role permissions
+// @router /admin/batch-create [post]
+func (t *ProjectRolePermController) BatchCreate() {
+	// json decode request
+	req := new(vo.ReqBatchCreateProjectRolePerm)
+	err := t.ReadRequestJson(&req)
+	if err != nil {
+		t.FailJson(errs.ERR_PARAM, err.Error())
+		return
+	}
+
+	// validate request params
+	err = req.Valid()
+	if err != nil {
+		t.FailJson(errs.ERR_PARAM, err.Error())
+		return
+	}
+
+	// check whether role exist
+	if tmp, _ := DefaultProjectRoleSvr.GetByName(req.ProjectRoleName); tmp != nil {
+		t.FailJson(errs.ERR_NO_RECORD, lang.I("project_role.exist"))
+		return
+	}
+
+	err = DefaultProjectRolePermSvr.CreateProjectRoleAndBindPerms(req.ProjectRoleName, req.Perms)
+	if err != nil {
+		t.FailJson(errs.ERR_OPERATE, err.Error())
+		return
+	}
+
+	t.SuccJson(RespData{})
+}
+
 // @Title Batch update to project role
-// @router /admin/batch [post]
+// @router /admin/batch-update [post]
 func (t *ProjectRolePermController) BatchUpdate() {
 	// json decode request
 	req := new(vo.ReqBatchProjectRolePerm)
@@ -90,8 +124,21 @@ func (t *ProjectRolePermController) BatchUpdate() {
 		return
 	}
 
+	// check whether duplicated project role name
+	tmp, err := DefaultProjectRoleSvr.GetByName(req.ProjectRoleName)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			t.FailJson(errs.ERR_OPERATE, err.Error())
+			return
+		}
+	}
+	if tmp != nil && tmp.Id != req.ProjectRoleId {
+		t.FailJson(errs.ERR_OPERATE, lang.I("project_role.exist"))
+		return
+	}
+
 	// batch update project role's permissions
-	err = DefaultProjectRolePermSvr.BatchUpdate(req.ProjectRoleId, req.Perms)
+	err = DefaultProjectRolePermSvr.BatchUpdate(req.ProjectRoleId, req.ProjectRoleName, req.Perms)
 	if err != nil {
 		t.FailJson(errs.ERR_OPERATE, err.Error())
 		return

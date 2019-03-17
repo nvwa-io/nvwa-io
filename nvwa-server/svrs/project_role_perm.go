@@ -115,9 +115,17 @@ func (t *ProjectRolePermSvr) DeleteById(id int64) error {
 // transaction operations:
 // 1. delete all old records
 // 2. insert all new records
-func (t *ProjectRolePermSvr) BatchUpdate(projectRoleId int64, perms []string) error {
+func (t *ProjectRolePermSvr) BatchUpdate(projectRoleId int64, projectRoleName string, perms []string) error {
 	tx, err := GetDb().Begin()
 	if err != nil {
+		return err
+	}
+
+	_, err = tx.Update(DefaultProjectRoleDao.Table(), dbx.Params{
+		"name": projectRoleName,
+	}, dbx.HashExp{"id": projectRoleId}).Execute()
+	if err != nil {
+		tx.Rollback()
 		return err
 	}
 
@@ -166,4 +174,47 @@ func (t *ProjectRolePermSvr) GetAllProjectRoleIdMap() (map[int64][]ProjectRolePe
 	}
 
 	return data, nil
+}
+
+// create project role and bind role permissions with transaction
+func (t *ProjectRolePermSvr) CreateProjectRoleAndBindPerms(projectRoleName string, perms []string) error {
+	tx, err := GetDb().Begin()
+	if err != nil {
+		return err
+	}
+
+	res, err := tx.Insert(DefaultProjectRoleDao.Table(), dbx.Params{
+		"name":  projectRoleName,
+		"ctime": libs.GetNow(),
+	}).Execute()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	projectRoleId, err := res.LastInsertId()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	for _, perm := range perms {
+		_, err = tx.Insert(DefaultProjectRolePermDao.Table(), dbx.Params{
+			"project_role_id": projectRoleId,
+			"perm":            perm,
+			"ctime":           libs.GetNow(),
+		}).Execute()
+
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
 }

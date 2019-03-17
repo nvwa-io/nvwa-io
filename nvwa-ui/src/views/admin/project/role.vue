@@ -21,7 +21,7 @@
           <span>{{ scope.row.project_role.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('page.admin.deploy.displayName')" min-width="60px" align="center">
+      <el-table-column :label="$t('page.admin.deploy.projectRoleName')" min-width="60px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.project_role.name }}</span>
         </template>
@@ -83,7 +83,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogRoleVisible= false">{{ $t('table.cancel') }}</el-button>
-        <el-button :loading="loadingRoleForm" type="primary" @click="dialogMemberStatus === 'create'? handleAddMemberSubmit(): handleEditRoleSubmit()">{{ $t('table.confirm') }}
+        <el-button :loading="loadingRoleForm" type="primary" @click="dialogRoleStatus=== 'create'? handleAddRoleSubmit(): handleEditRoleSubmit()">{{ $t('table.confirm') }}
         </el-button>
       </div>
     </el-dialog>
@@ -163,40 +163,6 @@ export default {
       })
     },
 
-    // gather role permission
-    gatherRolePermission(rolePerms) {
-      if (!rolePerms) {
-        return
-      }
-
-      const map = {}
-      const list = [] // {key:[{Permission}]}
-      // gather same scope, e.g: app, project's permission
-      // according to {xxx}.xxxx
-      rolePerms.forEach((item, k) => {
-        const arr = item.perm.split('.')
-        if (arr.length < 2) {
-          console.log('invalid permission: ' + item.perm)
-          return
-        }
-
-        const key = arr[0]
-        if (!map[key]) {
-          map[key] = []
-        }
-        map[key].push(item)
-      })
-
-      Object.getOwnPropertyNames(map).forEach((key, i) => {
-        list.push({
-          key: key,
-          list: map[key]
-        })
-      })
-
-      return list
-    },
-
     // gather scope permissions
     getAllScopePerm() {
       this.permScopeMap = {}
@@ -241,6 +207,10 @@ export default {
       this.dialogRoleVisible = true
       this.dialogRoleStatus = 'create'
 
+      this.formRoleData.id = undefined
+      this.formRoleData.projectRoleName = ''
+      this.formRoleData.checkedPerms = []
+
       this.getAllScopePerm().then(() => {
         this.permScopeList.forEach((item, v) => {
           item.list.forEach((perm, i) => {
@@ -263,6 +233,36 @@ export default {
           this.formRoleData.checkedPerms.push(item.perm)
         })
       })
+    },
+
+    // add project role submitted
+    handleAddRoleSubmit() {
+      this.loadingRoleForm = true
+      apiAdminProjectRolePerm.batchCreate(this.formRoleData.projectRoleName, this.formRoleData.checkedPerms)
+        .then(response => {
+          this.loadingRoleForm = false
+          this.dialogRoleVisible = false
+          Message.success(this.$t('page.deploy.operationSuccess'))
+          this.getList()
+        }).catch(error => {
+          this.loadingRoleForm = false
+          console.log(error)
+        })
+    },
+
+    // edit project role submitted
+    handleEditRoleSubmit() {
+      this.loadingRoleForm = true
+      apiAdminProjectRolePerm.batchUpdate(this.formRoleData.id, this.formRoleData.projectRoleName, this.formRoleData.checkedPerms)
+        .then(response => {
+          this.loadingRoleForm = false
+          this.dialogRoleVisible = false
+          Message.success(this.$t('page.deploy.operationSuccess'))
+          this.getList()
+        }).catch(error => {
+          this.loadingRoleForm = false
+          console.log(error)
+        })
     }
   }
 }
