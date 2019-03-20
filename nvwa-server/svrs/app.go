@@ -144,6 +144,11 @@ func (t *AppSvr) CreateAndInitEnvCluster(entity *AppEntity) (int64, error) {
 	return appId, nil
 }
 
+func (t *AppSvr) UpdateById(id int64, params dbx.Params) error {
+	_, err := DefaultAppDao.UpdateById(id, params)
+	return err
+}
+
 func (t *AppSvr) CreateByEntity(entity *AppEntity) (int64, error) {
 	id, err := DefaultAppDao.Create(entity)
 	if err != nil {

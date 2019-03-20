@@ -7,17 +7,9 @@
 
 ![nvwa-home](./screenshots/nvwa-arch.png)
 
+### 女娲特性
 
-### 女娲代码结构
-```
-_
-|____nvwa-agent 女娲客户端
-|____nvwa-server 女娲服务端
-|____nvwa-ui 女娲前端界面（vue）
-|____screenshots 项目截图
-|____wiki 项目资料文档
-
-```
+![nvwa-home](./screenshots/nvwa-features.png)
 
 ### 女娲首页
 ![nvwa-home](./screenshots/home.png)

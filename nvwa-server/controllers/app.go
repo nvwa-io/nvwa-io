@@ -72,10 +72,56 @@ func (t *AppController) Create() {
 	})
 }
 
-// @Title @TODO Update app
+// @Title Update app
 // @router /:app_id [put]
 func (t *AppController) Update() {
+	appId, err := t.GetInt64(":app_id")
+	if err != nil {
+		t.FailJson(errs.ERR_PARAM, err.Error())
+		return
+	}
 
+	// json decode request
+	req := new(vo.ReqApp)
+	err = t.ReadRequestJson(&req)
+	if err != nil {
+		t.FailJson(errs.ERR_PARAM, err.Error())
+		return
+	}
+
+	// validate request params
+	err = req.Valid()
+	if err != nil {
+		t.FailJson(errs.ERR_PARAM, err.Error())
+		return
+	}
+
+	// check whether app exist
+	ok, err := DefaultAppSvr.IsExist(req.App.Name, appId)
+	if err != nil {
+		t.FailJson(errs.ERR_OPERATE, err.Error())
+		return
+	}
+	if ok {
+		t.FailJson(errs.ERR_APP_EXIST, req.App.Name)
+		return
+	}
+
+	err = DefaultAppSvr.UpdateById(appId, dbx.Params{
+		"name":          req.App.Name,
+		"description":   req.App.Description,
+		"deploy_user":   req.App.DeployUser,
+		"deploy_path":   req.App.DeployPath,
+		"repo_url":      req.App.RepoUrl,
+		"repo_username": req.App.RepoUsername,
+		"repo_password": req.App.RepoPassword,
+	})
+	if err != nil {
+		t.FailJson(errs.ERR_OPERATE, err.Error())
+		return
+	}
+
+	t.SuccJson(RespData{})
 }
 
 // @Title update commands
